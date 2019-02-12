@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR } from "react-force-graph";
+import forceGraphSettings from "./forceGraphSettings";
 
 class ForceGraph extends Component {
   state = {
@@ -53,7 +54,8 @@ class ForceGraph extends Component {
         },
         {
           source: "5",
-          target: "1"
+          target: "1",
+          value: 4
         }
       ]
     }
@@ -75,7 +77,7 @@ class ForceGraph extends Component {
 
     const randomNodeVal = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
 
-    const randomEdgeAmnt = Math.floor(Math.random() * (1 - 2 + 1)) + 2;
+    const shouldMakeNewLink = Math.random() > 0.25;
 
     // make new node
     const newNode = {
@@ -85,22 +87,19 @@ class ForceGraph extends Component {
     };
 
     // make new links
-    const newLinks = [];
-    for (let i = 0; i < 1; i++) {
-      newLinks.push({
-        source: `${amountOfNodes + 1}`,
-        target: `${Math.floor(Math.random() * (1 - amountOfNodes + 1)) +
-          amountOfNodes}`
-      });
-    }
-
-    console.log(newLinks);
+    const newLink = {
+      source: `${amountOfNodes + 1}`,
+      target: `${Math.floor(Math.random() * (1 - amountOfNodes + 1)) +
+        amountOfNodes}`
+    };
 
     this.setState({
       amountOfNodes: amountOfNodes + 1,
       graphData: {
         ...graphData,
         nodes: [...graphData.nodes, newNode],
+        links: shouldMakeNewLink
+          ? [...graphData.links, newLink]
           : [...graphData.links]
       }
     });
@@ -116,9 +115,9 @@ class ForceGraph extends Component {
         </button>
         <button onClick={this.addNode}>add node</button>
         {graphType === 0 ? (
-          <ForceGraph2D graphData={graphData} />
+          <ForceGraph2D graphData={graphData} {...forceGraphSettings} />
         ) : (
-          <ForceGraph3D graphData={graphData} />
+          <ForceGraph3D graphData={graphData} {...forceGraphSettings} />
         )}
       </div>
     );
