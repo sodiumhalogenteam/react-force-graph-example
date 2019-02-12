@@ -119,12 +119,12 @@ class ForceGraph extends Component {
       onNodeClick: node => {
         const { lastNodeClick } = this.state;
 
-        console.log("a node was clicked", node);
+        console.log(`a node was clicked: ${node.name}`);
         if (
           lastNodeClick.id === node.id &&
           Date.now() - lastNodeClick.time < 500
         ) {
-          console.log("a node was double-clicked");
+          console.log(`a node was double-clicked: ${node.name}`);
         }
 
         this.setState({
@@ -135,17 +135,17 @@ class ForceGraph extends Component {
         });
       },
       onNodeRightClick: node => {
-        console.log("a node was right-clicked", node);
+        console.log(`a node was right-clicked: ${node.name}`);
       },
       onNodeHover: node => {
         if (node !== null) this.setState({ hoveredNode: node.id });
         else this.setState({ hoveredNode: null });
       },
       onNodeDrag: node => {
-        console.log("a node is being dragged", node);
+        console.log(`a node is being dragged: ${node.name}`);
       },
       onNodeDragEnd: node => {
-        console.log("node no longer being dragged", node);
+        console.log(`node no longer being dragged: ${node.name}`);
       }
     };
   }
@@ -161,35 +161,42 @@ class ForceGraph extends Component {
     });
   };
 
-  addNode = () => {
+  addNode = (nodesToAdd = 1) => {
     const { amountOfNodes, graphData } = this.state;
 
-    const randomNodeVal = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
+    const newNodes = [];
+    const newLinks = [];
 
-    const shouldMakeNewLink = Math.random() > 0.25;
+    for (let i = 0; i < nodesToAdd; i++) {
+      // new nodes
+      const randomNodeVal = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
+      const shouldMakeNewLink = Math.random() > 0.25;
 
-    // make new node
-    const newNode = {
-      id: `${amountOfNodes + 1}`,
-      name: `node ${amountOfNodes + 1}`,
-      value: randomNodeVal
-    };
+      newNodes.push({
+        id: `${amountOfNodes + 1 + i}`,
+        name: `node ${amountOfNodes + 1 + i}`,
+        value: randomNodeVal
+      });
 
-    // make new links
-    const newLink = {
-      source: `${amountOfNodes + 1}`,
-      target: `${Math.floor(Math.random() * (1 - amountOfNodes + 1)) +
-        amountOfNodes}`
-    };
+      const min = 1;
+      const max = amountOfNodes + i;
+
+      // new links
+      newLinks.push({
+        source: `${Math.floor(Math.random() * (max - min + 1)) + min}`,
+        target: `${Math.floor(Math.random() * (max - min + 1)) + min}`
+      });
+    }
 
     this.setState({
       amountOfNodes: amountOfNodes + 1,
       graphData: {
         ...graphData,
-        nodes: [...graphData.nodes, newNode],
-        links: shouldMakeNewLink
-          ? [...graphData.links, newLink]
-          : [...graphData.links]
+        nodes: [...graphData.nodes, ...newNodes],
+        links:
+          newLinks.length > 0
+            ? [...graphData.links, ...newLinks]
+            : [...graphData.links]
       }
     });
   };
@@ -203,6 +210,7 @@ class ForceGraph extends Component {
           {graphType === 0 ? "2D" : "3D"}
         </button>
         <button onClick={this.addNode}>add node</button>
+        <button onClick={() => this.addNode(1000)}>NUKE IT</button>
         {graphType === 0 ? (
           <ForceGraph2D
             ref={this.forceGraph}
