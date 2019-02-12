@@ -16,7 +16,8 @@ class ForceGraph extends Component {
         {
           id: "2",
           name: "node 2",
-          val: 3
+          val: 3,
+          selected: true
         },
         {
           id: "3",
@@ -36,7 +37,8 @@ class ForceGraph extends Component {
         {
           id: "6",
           name: "node 6",
-          val: 2
+          val: 2,
+          selected: true
         }
       ],
       links: [
@@ -54,8 +56,7 @@ class ForceGraph extends Component {
         },
         {
           source: "5",
-          target: "1",
-          value: 4
+          target: "1"
         }
       ]
     }
