@@ -8,6 +8,10 @@ class ForceGraph extends Component {
       graphType: 0, //options: 2d, 3d, or vr
       amountOfNodes: 6,
       hoveredNode: null,
+      lastNodeClick: {
+        id: null,
+        time: null
+      },
       graphData: {
         nodes: [
           {
@@ -113,7 +117,22 @@ class ForceGraph extends Component {
        *** EVENTS ***
        ***************/
       onNodeClick: node => {
+        const { lastNodeClick } = this.state;
+
         console.log("a node was clicked", node);
+        if (
+          lastNodeClick.id === node.id &&
+          Date.now() - lastNodeClick.time < 500
+        ) {
+          console.log("a node was double-clicked");
+        }
+
+        this.setState({
+          lastNodeClick: {
+            id: node.id,
+            time: Date.now()
+          }
+        });
       },
       onNodeRightClick: node => {
         console.log("a node was right-clicked", node);
