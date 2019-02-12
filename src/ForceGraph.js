@@ -101,7 +101,7 @@ class ForceGraph extends Component {
       graphData: {
         ...graphData,
         nodes: [...graphData.nodes, newNode],
-        links: [...graphData.links, ...newLinks]
+          : [...graphData.links]
       }
     });
   };
