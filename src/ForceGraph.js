@@ -70,12 +70,14 @@ class ForceGraph extends Component {
        ***************/
       backgroundColor: "#24272B",
       nodeCanvasObject: (node, ctx, globalScale) => {
+        const { hoveredNode } = this.state;
+
         // create circle
         ctx.beginPath();
         ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false);
         ctx.fillStyle = "#636971";
         ctx.fill();
-        if (node.selected) {
+        if (node.selected || node.id === hoveredNode) {
           ctx.lineWidth = 1;
           ctx.strokeStyle = "#FFF";
           ctx.stroke();
@@ -117,8 +119,8 @@ class ForceGraph extends Component {
         console.log("a node was right-clicked", node);
       },
       onNodeHover: node => {
-        console.log("a nodeis being hovered", node);
-        this.setState({ hoveredNode: node });
+        if (node !== null) this.setState({ hoveredNode: node.id });
+        else this.setState({ hoveredNode: null });
       },
       onNodeDrag: node => {
         console.log("a node is being dragged", node);
